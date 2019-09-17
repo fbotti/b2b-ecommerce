@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        
+        <template id="confirmation_form" inherit_id="website_sale.confirmation">
+
+            <xpath expr="//t[@t-call='website_sale.payment_confirmation_status']" position="before">
+                <!--span t-esc="website_sale_order.partner_id.state_id"/-->
+                <h3 class="text-left">
+                    <strong>Deuda Anterior:</strong>
+                </h3>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong>Total:</strong>
+                            </td>
+                            <td class="text-right" width="100">
+                                <strong t-esc="order.sudo().get_deuda_total(order.partner_id)" t-options="{'widget': 'monetary', 'display_currency': order.pricelist_id.currency_id}"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div t-if='not order.sudo().in_caba(order.partner_id)'
+                    class="alert alert-info">
+                    El pedido está sujeto a gastos de envío
+                </div>
+            </xpath>
+
+        </template>
+
+    </data>
+</odoo>

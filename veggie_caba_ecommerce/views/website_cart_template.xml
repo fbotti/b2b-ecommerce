@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        
+        <template id="cart_form" inherit_id="website_sale.cart">
+
+            <xpath expr="//div[hasclass('col-md-12', 'o_website_sale_rightfit')]/h2" position="after">
+                <!--span t-esc="website_sale_order.partner_id.state_id"/>
+                <span t-esc="website_sale_order.sudo().env.ref('base.state_ar_c')"/-->
+
+                <div t-if='not website_sale_order.sudo().in_caba(website_sale_order.partner_id)'
+                    class="alert alert-info">
+                    El pedido está sujeto a gastos de envío
+                </div>
+            </xpath>
+
+            <xpath expr="//div[hasclass('col-md-12', 'o_website_sale_rightfit')]/a[@href='/shop/checkout']" position="replace">
+                <a t-if="not optional_products and website_sale_order and website_sale_order.website_order_line" class="btn btn-primary pull-right mb32 mr8" href="/shop/checkout">
+                    <t t-if='website_sale_order.sudo().in_caba(website_sale_order.partner_id)'>
+                        <span class="hidden-xs">Proceso de Pago</span>
+                        <span class="visible-xs-inline">Pagar</span>
+                        <span class="fa fa-long-arrow-right"/>
+                    </t>
+                    <t t-else=''>
+                        <span class="hidden-xs">Confirmar Pedido</span>
+                        <span class="visible-xs-inline">Confirmar Pedido</span>
+                        <span class="fa fa-long-arrow-right"/>
+                    </t>
+                </a>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

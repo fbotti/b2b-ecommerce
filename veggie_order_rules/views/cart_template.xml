@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        
+        <template id="cart_template" inherit_id="website_sale.cart">
+            <xpath expr="//a[@href='/shop/checkout']" position="replace">
+                <div class="alert alert-danger hidden" id="message_send_cart">
+                    El monto minimo para poder comprar es de 
+                </div>
+                <div class="alert alert-danger hidden" id="message_send_cart_2">
+                    El monto minimo para poder comprar es de 
+                </div>
+
+                <a t-if="not optional_products and website_sale_order and website_sale_order.website_order_line" class="btn btn-primary pull-right mb32 mr8" href="/shop/checkout" id="button_send_cart">
+                    <span class="hidden-xs">Proceso de Pago</span>
+                    <span class="visible-xs-inline">Pagar</span>
+                    <span class="fa fa-long-arrow-right"/>
+                </a>
+                
+
+                <script>
+                    
+        odoo.define('veggie_order_rules.cart_template', function (require) {
+            "use strict";
+
+            require('web.dom_ready');
+            var core = require('web.core');
+            var rpc = require('web.rpc');
+            var ajax = require('web.ajax');
+            
+            $('#button_send_cart').click(function(e){
+                e.preventDefault();
+                ajax.jsonRpc('/shop/cart/compare', 'call', {}).then(function(data){
+                    if (data.send == true &amp;&amp; data.send_2 == true){
+                        window.location.href = "/shop/checkout";
+                    }else{
+                        //if (!data.send){
+                            $('#message_send_cart').html('<h3><b>No se pudo procesar la compra</b></h3>  <b>Esto pudo deverse a diversos factores:</b><br/> El monto minimo para poder comprar no ha sido alcanzado ($ ' + data.min +') <br/>  La cantidad minima de algun producto no ha sido alcanzado.');
+                            $('#message_send_cart').removeClass('hidden');
+                        //}
+                        /*if (!data.send_2){
+                            $('#message_send_cart_2').html(data.message[1]);
+                            $('#message_send_cart_2').removeClass('hidden');
+                        }*/
+                    }
+                });
+            });
+        });
+                </script>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>
